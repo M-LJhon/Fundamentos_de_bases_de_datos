@@ -1,0 +1,92 @@
+-- CREAR TABLAS
+-- Tabla simple sin PK, solo tipos de datos.
+CREATE TABLE demo_tipos(
+  id integer,
+  nombre text,
+  precio numeric(10, 2),
+  activo boolean,
+  fecha_ingreso date,
+  creado_en timestamp
+  
+);
+
+CREATE TABLE
+INSERT 0 1
+ id | nombre | precio | activo | fecha_ingreso |         creado_en         
+----+--------+--------+--------+---------------+---------------------------
+  1 | Demo   |  29.99 | t      | 2024-01-01    | 2026-05-26 00:54:55.53903
+
+
+-- Llaves primarias PK
+-- Forma 1: Serial (Clasica, muy usada)
+CREATE TABLE ejemplo_serial (
+    id SERIAL PRIMARY KEY,
+    nombre TEXT NOT NULL
+);
+
+
+-- Forma 2: Generated always as identity
+-- Estandar, moderno - recomendado.
+CREATE TABLE ejemplo_identity (
+    id INTEGER generated always AS IDENTITY PRIMARY KEY,
+    nombre TEXT NOT NULL
+);
+
+-- ejemplo de tablas con restricciones.
+CREATE TABLE clientes (
+  cliente_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  telefono VARCHAR(20),
+  fecha_registro DATE NOT NULL DEFAULT CURRENT_DATE,
+  activo BOOLEAN NOT NULL DEFAULT TRUE,
+  tipo_cliente_id INTEGER NOT NULL
+);
+
+
+CREATE TABLE categorias (
+  categoria_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nombre TEXT NOT NULL UNIQUE,
+  descripcion TEXT
+);
+
+
+CREATE TABLE productos (
+  producto_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  descripcion TEXT,
+  precio NUMERIC(10,2) NOT NULL,
+  stock INTEGER NOT NULL DEFAULT 0,
+  categoria_id INTEGER NOT NULL
+);
+
+-- Consultas para validar la creacion de las tablas en PostGreSQL
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+ORDER BY table_name;
+
+-- Ver estructura de una tabla.
+SELECT column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
+WHERE table_name = 'clientes'
+ORDER BY ordinal_position;
+
+-- Llaves foraneas FK -> REFERENCES nombre_tabla(nombre_columna).
+CREATE TABLE productos (
+  producto_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  descripcion TEXT,
+  precio NUMERIC(10,2) NOT NULL,
+  stock INTEGER NOT NULL DEFAULT 0,
+  categoria_id INTEGER NOT NULL REFERENCES categorias(categoria_id)
+);
+
+-- Podemos tener varias FK juntas.
+CREATE TABLE pedidos (
+  pedido_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  fecha DATE NOT NUTLL DEFAULT CURRENT_DATE,
+  cliente_id INTEGER NOT NULL REFERENCES clientes(cliente_id),
+  sucursal_id INTEGER NOT NULL REFERENCES sucursales(sucursal_id),
+  empleado_id INTEGER NOT NULL REFERENCES empleados(empleado_id)
+);
