@@ -1,0 +1,86 @@
+-- Crear tablas para los ejemplos
+CREATE TABLE paises (
+    pais_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre  TEXT NOT NULL UNIQUE,
+    codigo  VARCHAR(3) NOT NULL UNIQUE
+);
+
+CREATE TABLE categorias (
+    categoria_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre       TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE tipos_cliente (
+    tipo_cliente_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre          TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE clientes (
+    cliente_id      INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre          TEXT         NOT NULL,
+    email           VARCHAR(100) NOT NULL UNIQUE,
+    activo          BOOLEAN      NOT NULL DEFAULT TRUE,
+    tipo_cliente_id INTEGER      NOT NULL REFERENCES tipos_cliente(tipo_cliente_id)
+);
+
+-- INSERT basico -> Especificando las columnas.
+INSERT INTO paises (nombre, codigo) VALUES ('Chile', 'CHL');
+INSERT INTO paises (nombre, codigo) VALUES ('Argentina', 'ARG');
+
+-- Resultado:
+SELECT * FROM paises;
+
+pais_id |  nombre   | codigo 
+---------+-----------+--------
+       1 | Chile     | CHL
+       2 | Argentina | ARG
+(2 rows)
+
+-- INSERT multiple.
+INSERT INTO paises (nombre, codigo) VALUES
+('Colombia', 'COL'),
+('Mexico', 'MEX'),
+('Peru', 'PER');
+
+-- Resultado:
+pais_id |  nombre   | codigo 
+---------+-----------+--------
+       1 | Chile     | CHL
+       2 | Argentina | ARG
+       3 | Colombia  | COL
+       4 | Mexico    | MEX
+       5 | Peru      | PER
+(5 rows)
+
+-- INSERT con RETURNING.
+INSERT INTO categorias (nombre)
+VALUES ('Electronica')
+RETURNING categoria_id, nombre;
+
+-- Resultado:
+categoria_id |   nombre    
+--------------+-------------
+            1 | Electronica
+(1 row)
+
+-- RETURNING cualquier columna
+INSERT INTO tipos_cliente (nombre)
+VALUES ('Premium')
+RETURNING *;
+
+INSERT INTO tipos_cliente (nombre) VALUES
+    ('Estándar'),
+    ('Corporativo'),
+    ('Mayorista')
+RETURNING tipo_cliente_id, nombre;
+
+- INSERT con FK — el tipo_cliente_id debe existir
+INSERT INTO clientes (nombre, email, tipo_cliente_id)
+VALUES ('María González', 'maria@email.cl', 1)
+RETURNING cliente_id, nombre, email;
+
+-- INSERT múltiple de clientes
+INSERT INTO clientes (nombre, email, activo, tipo_cliente_id) VALUES
+    ('Carlos Rodríguez', 'carlos@email.cl', TRUE,  2),
+    ('Ana Martínez',     'ana@email.ar',    TRUE,  1),
+    ('Luis Vargas',      'luis@email.co',   TRUE,  3);
