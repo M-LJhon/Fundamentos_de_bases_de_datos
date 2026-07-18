@@ -1,0 +1,139 @@
+-- ALTER TABLE
+-- Tabla de ejemplo.
+CREATE TABLE empleados_demo (
+    empleado_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    cargo TEXT
+);
+
+
+-- Ver estructura de la tabla:
+SELECT column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
+WHERE table_name = 'empleados_demo'
+ORDER BY ordinal_position;
+
+-- Resultado:
+column_name | data_type | is_nullable | column_default 
+-------------+-----------+-------------+----------------
+ empleado_id | integer   | NO          | 
+ nombre      | text      | NO          | 
+ cargo       | text      | YES         | 
+(3 rows)
+
+
+-- ADD COLUMN: agregar columna nueva a una tabla.
+ALTER TABLE empleados_demo
+ADD COLUMN email TEXT;
+
+ALTER TABLE empleados_demo
+ADD COLUMN activo BOOLEAN NOT NULL DEFAULT TRUE;
+
+-- Estructura resultante:
+column_name | data_type | is_nullable | column_default 
+-------------+-----------+-------------+----------------
+ empleado_id | integer   | NO          | 
+ nombre      | text      | NO          | 
+ cargo       | text      | YES         | 
+ email       | text      | YES         | 
+ activo      | boolean   | NO          | true
+(5 rows)
+
+-- Vamos a alterar una columna existente.
+ALTER TABLE empleados_demo
+ALTER COLUMN email TYPE VARCHAR(100);
+
+-- Resultante:
+column_name |     data_type     | is_nullable | column_default 
+-------------+-------------------+-------------+----------------
+ empleado_id | integer           | NO          | 
+ nombre      | text              | NO          | 
+ cargo       | text              | YES         | 
+ email       | character varying | YES         | 
+ activo      | boolean           | NO          | true
+(5 rows)
+
+-- DROP NOT NULL: Eliminar la restriccion de nulo en un campo.
+ALTER TABLE empleados_demo
+ALTER COLUMN nombre DROP NOT NULL;
+
+-- Resultante
+column_name |     data_type     | is_nullable | column_default 
+-------------+-------------------+-------------+----------------
+ empleado_id | integer           | NO          | 
+ nombre      | text              | YES         | 
+ cargo       | text              | YES         | 
+ email       | character varying | YES         | 
+ activo      | boolean           | NO          | true
+(5 rows)
+
+-- SET NOT NULL: Agregar la restriccion de NOT NULL.
+ALTER TABLE empleados_demo
+ALTER COLUMN nombre SET NOT NULL;
+
+-- Resultante:
+column_name |     data_type     | is_nullable | column_default 
+-------------+-------------------+-------------+----------------
+ empleado_id | integer           | NO          | 
+ nombre      | text              | NO          | 
+ cargo       | text              | YES         | 
+ email       | character varying | YES         | 
+ activo      | boolean           | NO          | true
+(5 rows)
+
+-- RENAME COLUMN: Renombrar una columna:
+ALTER TABLE empleados_demo
+RENAME COLUMN cargo TO puesto;
+
+-- Resultante:
+column_name |     data_type     | is_nullable | column_default 
+-------------+-------------------+-------------+----------------
+ empleado_id | integer           | NO          | 
+ nombre      | text              | NO          | 
+ puesto      | text              | YES         | 
+ email       | character varying | YES         | 
+ activo      | boolean           | NO          | true
+(5 rows)
+
+-- ADD CONSTRAINT: agregar una restriccion.
+ALTER TABLE empleados_demo
+ADD CONSTRAINT email_unico UNIQUE (email);
+
+-- DROP CONSTRAINT: Remover una restriccion.
+ALTER TABLE empleados_demo
+DROP CONSTRAINT email_unico;
+
+-- RENAME TO: Renombrar la tabla.
+ALTER TABLE empleados_demo
+RENAME TO empleados;
+
+-- Reto:
+-- Agregar fecha de nacimiento tipo date
+-- Renombrar la fecha de nacimiento a nacimiento
+-- Eliminar la columna fecha de nacimiento.
+
+-- CREAR COLUMNA --> ADD COLUMN
+ALTER TABLE empleados
+ADD COLUMN fecha_nacimiento DATE;
+
+-- AGREGO NOT NULL:
+ALTER TABLE empleados
+ALTER COLUMN fecha_nacimiento SET NOT NULL;
+
+-- RENOMBRAR:
+ALTER TABLE empleados
+RENAME COLUMN fecha_nacimiento TO nacimiento;
+
+-- Eliminar columna 'nacimiento'
+ALTER TABLE empleados
+DROP COLUMN nacimiento;
+
+-- Resultado final:
+column_name |     data_type     | is_nullable | column_default 
+-------------+-------------------+-------------+----------------
+ empleado_id | integer           | NO          | 
+ nombre      | text              | NO          | 
+ puesto      | text              | YES         | 
+ email       | character varying | YES         | 
+ activo      | boolean           | NO          | true
+(5 rows)

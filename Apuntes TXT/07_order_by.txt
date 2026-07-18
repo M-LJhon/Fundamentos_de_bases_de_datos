@@ -1,0 +1,35 @@
+Order By nos permite ordenar los datos retornados en una consulta SQL.
+Podemos ordenar por columnas ya sea de forma descendente (DESC) o ascendente(ASC).
+Tambien podemos limitar la cantidad de registros retornados por consulta usando Limit cantidad de registros.
+Tambien podemos Paginar resultados haciendo que se salten cierta cantidad de registros con Offset.
+Los Null tienen mas peso que los demas datos, por ende en un orden DESC saldran de primeros y en ASC saldran de ultimos.
+Si deseas que los Null salgan primero puedes usar Null first o si deseas lo contrario usas null last. Esto no dependeria ya si es ASC o DESC.
+
+-- Ordenamos por precio de mayor a menor y solo tomamos los primeros 5 productos mas caros.
+SELECT * FROM productos
+ORDER BY precio DESC
+Limit 5;
+
+-- Paginamos de a 10 productos, con precio de mayor a menor.
+SELECT * FROM productos
+OREDER BY precio DESC
+LIMIT 10 OFFSET 0;
+
+-- DEL 11 - 20
+SELECT * FROM productos
+ORDER BY precio DESC
+LIMIT 10 OFFSET 10
+
+-- DEL 21 - 30
+SELECT * FROM productos
+ORDER BY precio DESC
+LIMIT 10 OFFSET 20
+
+-- Organizamos los null primero.
+SELECT * FROM clientes
+ORDER BY nombre ASC NULL FIRST
+LIMIT 20 OFFSET 0;
+
+-- Organizamos los null de ultimos.
+SELECT * FROM clientes
+ORDER BY nombre ASC NULL LAST;

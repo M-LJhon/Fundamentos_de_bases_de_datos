@@ -1,0 +1,13 @@
+-- Update
+UPDATE clientes
+SET nombre_cliente = 'Jhon'
+WHERE id_cliente = 1
+RETURNING nombre_cliente;
+
+-- Update varios campos de un registro.
+UPDATE clientes
+SET nombre_cliente = 'Sofia',
+    apellidos_cliente = 'Mejia',
+    num_identificacion_cliente = '1234567890'
+WHERE id_cliente = 2
+RETURNING nombre_cliente, apellidos_cliente, num_identificacion_cliente;

@@ -1,0 +1,25 @@
+-- Delete Fisicos.
+Se usan para eliminar fisicamente o permanentemente registros. No es tan recomendable.
+
+DELETE FROM clientes
+WHERE cliente_id = 100
+RETURNING *;
+
+-- Borrado logico.
+Consiste en poner una columna de "Activo" en una tabla, por ejemplo de usuarios.
+Cuando un usuario ya no hace parte del negocio, no lo borramos fisicamente, sino que
+lo ponemos como inactivo. (activo = false).
+
+UPDATE clientes
+SET activo = false
+WHERE cliente_id = 100
+RETURNING *;
+
+De esta manera si el cliente regresa y desea volver a ser cliente activo del negocio
+el registro no se debe de volver a crear, sino que se le modifica el estado de activo.
+
+UPDATE clientes
+SET activo = true
+WHERE cliente_id = 100
+RETURNING *;
+
