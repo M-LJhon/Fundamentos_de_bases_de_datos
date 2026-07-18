@@ -1,0 +1,45 @@
+-- Importar datos en CSV a la BD.
+\copy paises FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/01_Paises.csv' DELIMITER ',' CSV HEADER;
+\copy categorias FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/02_Categorias.csv' DELIMITER ',' CSV HEADER;
+\copy tiposcliente FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/03_TiposCliente.csv' DELIMITER ',' CSV HEADER;
+\copy sucursales FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/04_Sucursales.csv' DELIMITER ',' CSV HEADER;
+\copy empleados FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/05_Empleados.csv' DELIMITER ',' CSV HEADER;
+\copy clientes FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/06_Clientes.csv' DELIMITER ',' CSV HEADER;
+\copy productos FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/07_Productos.csv' DELIMITER ',' CSV HEADER;
+\copy pedidos FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/08_Pedidos.csv' DELIMITER ',' CSV HEADER;
+\copy pedidos FROM '/home/jhonalex/Documents/Bases de datos/TiendaLatam_CSV/09_DetallePedidos.csv' DELIMITER ',' CSV HEADER;
+
+
+
+
+
+
+-- Iniciar PostGreSQL con usuario postgres.
+sudo -iu postgres
+
+-- Iniciar terminal SQL.
+psql
+
+-- Salir de la terminal SQL.
+\q
+
+-- Primeros pasos.
+-- Crear usuario de BD.
+CREATE USER jhonalex WITH PASSWORD 'TuContraseña';
+
+-- Crear BD con Owner (El Owner podra importar datos, tendra todos los permisos, escritora, lectura, etc).
+CREATE DATABASE concesionario OWNER jhonalex;
+-- Dar el mayor privilegio (Todos los permisos).
+GRANT ALL PRIVILEGES ON DATABASE concesionario TO jhonalex;
+
+-- Eliminar el Schema public por si create tablas en la BD postgres y no en tu BD.
+DROP SCHEMA public CASCADE;
+-- Crear de nuevo el Schema public.
+CREATE SCHEMA public;
+
+-- Comandos de PSQL mas usados.
+\l -- Listar bases de datos creadas en el motor.
+\c nombre -- Conectarse a la BD.
+\conninfo -- Ver conexion actual de BD (a que Bd estamos conectados).
+\dt -- Listar tablas de la BD actual.
+\d tabla -- Ver la estructura de una tabla.
